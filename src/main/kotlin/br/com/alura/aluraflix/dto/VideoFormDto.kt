@@ -1,12 +1,12 @@
 package br.com.alura.aluraflix.dto
 
-import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotBlank
 
 data class VideoFormDto(
-    @field:NotEmpty(message = "Informe o título.")
-    val titulo: String,
-    @field:NotEmpty(message = "Informe a descrição.")
-    val descricao: String,
-    @field:NotEmpty(message = "Informe a url.")
-    val url: String
+    @field:NotBlank(message = "Informe o título.")
+    val titulo: String?,
+    @field:NotBlank(message = "Informe a descrição.")
+    val descricao: String?,
+    @field:NotBlank(message = "Informe a url.")
+    val url: String?
 )

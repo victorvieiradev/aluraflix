@@ -56,5 +56,7 @@ class ExceptionHandler {
             mensagem = ex.message,
             path = request.servletPath
         )
+
+
     }
 }

@@ -9,9 +9,9 @@ class VideoFormDtoMapper: ToMapper<VideoFormDto, VideoModel> {
     override fun map(t: VideoFormDto): VideoModel {
         return VideoModel(
             id = null,
-            titulo = t.titulo,
-            descricao = t.descricao,
-            url = t.url
+            titulo = t.titulo!!,
+            descricao = t.descricao!!,
+            url = t.url!!
         )
     }
 }
