@@ -43,4 +43,18 @@ class ExceptionHandler {
 
         )
     }
+
+    @ExceptionHandler(Exception::class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    fun exceptionHandlerDefault(
+        ex: java.lang.Exception,
+        request: HttpServletRequest
+    ): ErrorView{
+        return ErrorView(
+            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            erro = HttpStatus.INTERNAL_SERVER_ERROR.name,
+            mensagem = ex.message,
+            path = request.servletPath
+        )
+    }
 }
