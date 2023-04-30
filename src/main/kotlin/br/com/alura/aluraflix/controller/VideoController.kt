@@ -5,11 +5,13 @@ import br.com.alura.aluraflix.dto.VideoViewDto
 import br.com.alura.aluraflix.service.VideoService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.util.UriBuilder
 
 @RestController
 @RequestMapping("/videos")
@@ -19,9 +21,20 @@ class VideoController(
 
     @PostMapping
     fun cadastrar(
-        @RequestBody @Valid videoFormDto: VideoFormDto
+        @RequestBody
+        @Valid
+        videoFormDto: VideoFormDto
     ): VideoViewDto {
-        val videoCadastrado = videoService.cadastrar(videoFormDto)
-        return videoCadastrado
+        return videoService.cadastrar(videoFormDto)
+    }
+
+    @GetMapping("/{id}")
+    fun buscarPorId(@PathVariable id: Long): ResponseEntity<VideoViewDto>{
+return ResponseEntity.ok(videoService.buscarPorId(id))
+    }
+    @DeleteMapping("/{id}")
+    fun excluir(@PathVariable id: Long): ResponseEntity<String> {
+        videoService.excluir(id)
+        return ResponseEntity.ok().body("Excluído.")
     }
 }
