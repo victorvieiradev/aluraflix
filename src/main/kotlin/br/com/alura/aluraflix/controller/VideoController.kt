@@ -15,6 +15,11 @@ class VideoController(
     private val videoService: VideoService
 ) {
 
+    @GetMapping
+    fun listar(): MutableList<VideoViewDto> {
+        return videoService.listar()
+    }
+
     @PostMapping
     fun cadastrar(
         @RequestBody

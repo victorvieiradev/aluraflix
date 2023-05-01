@@ -16,6 +16,15 @@ class VideoService(
     private val videoFormDtoMapper: VideoFormDtoMapper,
     private val videoRepository: VideoRepository
 ) {
+    fun listar(): MutableList<VideoViewDto> {
+        val listaDeVideos = mutableListOf<VideoViewDto>()
+        val videos = videoRepository.findAll()
+        videos.forEach {
+            video ->
+            listaDeVideos.add(videoViewMapper.map(video))
+        }
+        return listaDeVideos
+    }
     fun cadastrar(videoFormDto: VideoFormDto): VideoViewDto {
         val video = videoFormDtoMapper.map(videoFormDto)
         val videoSalvo = videoRepository.save(video)
