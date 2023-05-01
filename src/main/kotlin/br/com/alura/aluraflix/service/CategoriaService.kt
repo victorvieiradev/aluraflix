@@ -1,6 +1,7 @@
 package br.com.alura.aluraflix.service
 
 import br.com.alura.aluraflix.dto.CategoriaView
+import br.com.alura.aluraflix.exceptions.NotFoundException
 import br.com.alura.aluraflix.mapper.CategoriaFormMapper
 import br.com.alura.aluraflix.mapper.CategoriaViewMapper
 import br.com.alura.aluraflix.repository.CategoriaRepository
@@ -20,5 +21,12 @@ class CategoriaService(
             listaDeCategorias.add(categoriaViewMapper.map(categoria))
         }
         return listaDeCategorias
+    }
+
+    fun buscarPorId(id: Long): CategoriaView {
+        val categoria = categoriaRepository.findById(id).orElseThrow {
+            NotFoundException("A categoria com o id $id não foi encontrada.")
+        }
+        return categoriaViewMapper.map(categoria)
     }
 }
