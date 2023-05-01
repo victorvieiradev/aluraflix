@@ -16,8 +16,7 @@ class CategoriaService(
     fun listar(): MutableList<CategoriaView> {
         val listaDeCategorias = mutableListOf<CategoriaView>()
         val categorias = categoriaRepository.findAll()
-        categorias.forEach {
-            categoria ->
+        categorias.forEach { categoria ->
             listaDeCategorias.add(categoriaViewMapper.map(categoria))
         }
         return listaDeCategorias
@@ -28,5 +27,10 @@ class CategoriaService(
             NotFoundException("A categoria com o id $id não foi encontrada.")
         }
         return categoriaViewMapper.map(categoria)
+    }
+
+    fun excluir(id: Long) {
+        val categoria = buscarPorId(id)
+        categoriaRepository.deleteById(categoria.id!!)
     }
 }
