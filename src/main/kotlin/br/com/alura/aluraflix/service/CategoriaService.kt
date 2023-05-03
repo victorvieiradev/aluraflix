@@ -1,5 +1,6 @@
 package br.com.alura.aluraflix.service
 
+import br.com.alura.aluraflix.dto.CategoriaForm
 import br.com.alura.aluraflix.dto.CategoriaView
 import br.com.alura.aluraflix.exceptions.NotFoundException
 import br.com.alura.aluraflix.mapper.CategoriaFormMapper
@@ -32,5 +33,11 @@ class CategoriaService(
     fun excluir(id: Long) {
         val categoria = buscarPorId(id)
         categoriaRepository.deleteById(categoria.id!!)
+    }
+
+    fun cadastrar(categoriaForm: CategoriaForm): CategoriaView {
+        val categoria = categoriaFormMapper.map(categoriaForm)
+        val categoriaSalva = categoriaRepository.save(categoria)
+        return categoriaViewMapper.map(categoriaSalva)
     }
 }

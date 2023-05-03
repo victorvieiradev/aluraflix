@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank
 
 data class CategoriaForm(
     @field:NotBlank(message = "Informe o título.")
-    val titulo: String,
+    val titulo: String?,
     @field:NotBlank(message = "Informe a cor.")
-    val cor: String
+    val cor: String?
 )

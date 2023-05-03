@@ -9,8 +9,8 @@ class CategoriaFormMapper: ToMapper<CategoriaForm, CategoriaModel> {
     override fun map(t: CategoriaForm): CategoriaModel {
         return CategoriaModel(
             id = null,
-            titulo = t.titulo,
-            cor = t.cor
+            titulo = t.titulo!!,
+            cor = t.cor!!
         )
     }
 }
