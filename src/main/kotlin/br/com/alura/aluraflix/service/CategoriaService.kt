@@ -1,10 +1,12 @@
 package br.com.alura.aluraflix.service
 
+import br.com.alura.aluraflix.dto.AtualizaCategoriaForm
 import br.com.alura.aluraflix.dto.CategoriaForm
 import br.com.alura.aluraflix.dto.CategoriaView
 import br.com.alura.aluraflix.exceptions.NotFoundException
 import br.com.alura.aluraflix.mapper.CategoriaFormMapper
 import br.com.alura.aluraflix.mapper.CategoriaViewMapper
+import br.com.alura.aluraflix.model.CategoriaModel
 import br.com.alura.aluraflix.repository.CategoriaRepository
 import org.springframework.stereotype.Service
 
@@ -39,5 +41,20 @@ class CategoriaService(
         val categoria = categoriaFormMapper.map(categoriaForm)
         val categoriaSalva = categoriaRepository.save(categoria)
         return categoriaViewMapper.map(categoriaSalva)
+    }
+
+    fun atualizar(atualizaCategoriaForm: AtualizaCategoriaForm): CategoriaView {
+        val categoria = buscarPorId(atualizaCategoriaForm.id!!)
+return categoriaViewMapper.map(
+    categoriaRepository.save(
+        CategoriaModel(
+            id = atualizaCategoriaForm.id,
+            titulo = atualizaCategoriaForm.titulo ?: categoria.titulo,
+            cor = atualizaCategoriaForm.cor ?: categoria.cor
+
+        )
+
+    )
+)
     }
 }

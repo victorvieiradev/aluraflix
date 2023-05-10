@@ -1,5 +1,6 @@
 package br.com.alura.aluraflix.controller
 
+import br.com.alura.aluraflix.dto.AtualizaCategoriaForm
 import br.com.alura.aluraflix.dto.CategoriaForm
 import br.com.alura.aluraflix.dto.CategoriaView
 import br.com.alura.aluraflix.service.CategoriaService
@@ -32,7 +33,7 @@ class CategoriaController(
         return categoriaService.cadastrar(categoriaForm)
     }
     @PutMapping
-    fun atualizar(){
-
+    fun atualizar(@RequestBody @Valid atualizaCategoriaForm: AtualizaCategoriaForm): CategoriaView{
+        return categoriaService.atualizar(atualizaCategoriaForm)
     }
 }
