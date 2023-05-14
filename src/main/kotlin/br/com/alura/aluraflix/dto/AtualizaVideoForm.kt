@@ -7,5 +7,6 @@ data class AtualizaVideoForm(
     val id: Long,
     val titulo: String?,
     val descricao: String?,
-    val url: String?
+    val url: String?,
+    val idCategoria: Long
 )

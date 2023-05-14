@@ -1,41 +1,41 @@
 package br.com.alura.aluraflix.service
 
 import br.com.alura.aluraflix.dto.AtualizaVideoForm
-import br.com.alura.aluraflix.dto.VideoFormDto
-import br.com.alura.aluraflix.dto.VideoViewDto
+import br.com.alura.aluraflix.dto.VideoForm
+import br.com.alura.aluraflix.dto.VideoView
 import br.com.alura.aluraflix.exceptions.NotFoundException
-import br.com.alura.aluraflix.mapper.VideoFormDtoMapper
-import br.com.alura.aluraflix.mapper.VideoViewMapper
-import br.com.alura.aluraflix.model.VideoModel
+import br.com.alura.aluraflix.mapper.VideoFormToVideo
+import br.com.alura.aluraflix.mapper.VideoToVideoView
+import br.com.alura.aluraflix.model.Video
+import br.com.alura.aluraflix.repository.CategoriaRepository
 import br.com.alura.aluraflix.repository.VideoRepository
 import org.springframework.stereotype.Service
+import java.util.stream.Collectors
 
 @Service
 class VideoService(
-    private val videoViewMapper: VideoViewMapper,
-    private val videoFormDtoMapper: VideoFormDtoMapper,
-    private val videoRepository: VideoRepository
+    private val videoToVideoView: VideoToVideoView,
+    private val videoFormToVideo: VideoFormToVideo,
+    private val videoRepository: VideoRepository,
+    private val categoriaRepository: CategoriaRepository
 ) {
-    fun listar(): MutableList<VideoViewDto> {
-        val listaDeVideos = mutableListOf<VideoViewDto>()
-        val videos = videoRepository.findAll()
-        videos.forEach {
-            video ->
-            listaDeVideos.add(videoViewMapper.map(video))
-        }
-        return listaDeVideos
-    }
-    fun cadastrar(videoFormDto: VideoFormDto): VideoViewDto {
-        val video = videoFormDtoMapper.map(videoFormDto)
-        val videoSalvo = videoRepository.save(video)
-        return videoViewMapper.map(videoSalvo)
+    fun listar(): MutableList<VideoView> {
+        return videoRepository.findAll().stream().map {
+            videoToVideoView.map(it)
+        }.collect(Collectors.toList())
     }
 
-    fun buscarPorId(id: Long): VideoViewDto {
+    fun cadastrar(videoForm: VideoForm): VideoView {
+        val video = videoFormToVideo.map(videoForm)
+        val videoSalvo = videoRepository.save(video)
+        return videoToVideoView.map(videoSalvo)
+    }
+
+    fun buscarPorId(id: Long): VideoView {
         val video = videoRepository.findById(id).orElseThrow {
             NotFoundException(mensagem = "O vídeo $id não foi encontrado.")
         }
-        return videoViewMapper.map(video)
+        return videoToVideoView.map(video)
     }
 
     fun excluir(id: Long) {
@@ -43,15 +43,19 @@ class VideoService(
         videoRepository.deleteById(video.id!!)
     }
 
-    fun atualiza(atualizaVideoForm: AtualizaVideoForm): VideoViewDto {
+    fun atualiza(atualizaVideoForm: AtualizaVideoForm): VideoView {
         val video = buscarPorId(atualizaVideoForm.id)
-        return videoViewMapper.map(
+        return videoToVideoView.map(
             videoRepository.save(
-                VideoModel(
+                Video(
                     id = atualizaVideoForm.id,
                     titulo = atualizaVideoForm.titulo ?: video.titulo,
                     descricao = atualizaVideoForm.descricao ?: video.descricao,
                     url = atualizaVideoForm.url ?: video.url,
+                    categoria = categoriaRepository.findById(atualizaVideoForm.idCategoria).orElseThrow {
+                        NotFoundException("Categoria não encontrada.")
+                    }
+
                 )
             )
         )

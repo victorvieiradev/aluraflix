@@ -1,8 +1,8 @@
 package br.com.alura.aluraflix.controller
 
 import br.com.alura.aluraflix.dto.AtualizaVideoForm
-import br.com.alura.aluraflix.dto.VideoFormDto
-import br.com.alura.aluraflix.dto.VideoViewDto
+import br.com.alura.aluraflix.dto.VideoForm
+import br.com.alura.aluraflix.dto.VideoView
 import br.com.alura.aluraflix.service.VideoService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -16,7 +16,7 @@ class VideoController(
 ) {
 
     @GetMapping
-    fun listar(): MutableList<VideoViewDto> {
+    fun listar(): MutableList<VideoView> {
         return videoService.listar()
     }
 
@@ -24,13 +24,13 @@ class VideoController(
     fun cadastrar(
         @RequestBody
         @Valid
-        videoFormDto: VideoFormDto
-    ): VideoViewDto {
-        return videoService.cadastrar(videoFormDto)
+        videoForm: VideoForm
+    ): VideoView {
+        return videoService.cadastrar(videoForm)
     }
 
     @GetMapping("/{id}")
-    fun buscarPorId(@PathVariable id: Long): ResponseEntity<VideoViewDto>{
+    fun buscarPorId(@PathVariable id: Long): ResponseEntity<VideoView>{
 return ResponseEntity.ok(videoService.buscarPorId(id))
     }
     @DeleteMapping("/{id}")
@@ -44,7 +44,7 @@ return ResponseEntity.ok(videoService.buscarPorId(id))
         @RequestBody
         @Valid
         atualizaVideoForm: AtualizaVideoForm
-    ): VideoViewDto {
+    ): VideoView {
         return videoService.atualiza(atualizaVideoForm)
     }
 }

@@ -1,6 +1,6 @@
 package br.com.alura.aluraflix.mapper
 
-interface ToMapper<T, U> {
+interface Mapper<T, U> {
     fun map(t: T): U
 
 }

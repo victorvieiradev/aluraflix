@@ -1,8 +1,8 @@
 package br.com.alura.aluraflix.dto
 
-data class VideoViewDto(
-    val id: Long?,
+data class VideoDto(
     val titulo: String,
     val descricao: String,
     val url: String
-)
+) {
+}

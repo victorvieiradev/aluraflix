@@ -4,32 +4,30 @@ import br.com.alura.aluraflix.dto.AtualizaCategoriaForm
 import br.com.alura.aluraflix.dto.CategoriaForm
 import br.com.alura.aluraflix.dto.CategoriaView
 import br.com.alura.aluraflix.exceptions.NotFoundException
-import br.com.alura.aluraflix.mapper.CategoriaFormMapper
-import br.com.alura.aluraflix.mapper.CategoriaViewMapper
-import br.com.alura.aluraflix.model.CategoriaModel
+import br.com.alura.aluraflix.mapper.CategoriaFormToCategoria
+import br.com.alura.aluraflix.mapper.CategoriaToCategoriaView
+import br.com.alura.aluraflix.model.Categoria
 import br.com.alura.aluraflix.repository.CategoriaRepository
 import org.springframework.stereotype.Service
+import java.util.stream.Collectors
 
 @Service
 class CategoriaService(
     private val categoriaRepository: CategoriaRepository,
-    private val categoriaViewMapper: CategoriaViewMapper,
-    private val categoriaFormMapper: CategoriaFormMapper
+    private val categoriaToCategoriaView: CategoriaToCategoriaView,
+    private val categoriaFormToCategoria: CategoriaFormToCategoria,
 ) {
     fun listar(): MutableList<CategoriaView> {
-        val listaDeCategorias = mutableListOf<CategoriaView>()
-        val categorias = categoriaRepository.findAll()
-        categorias.forEach { categoria ->
-            listaDeCategorias.add(categoriaViewMapper.map(categoria))
-        }
-        return listaDeCategorias
+        return categoriaRepository.findAll().stream().map {
+            categoriaToCategoriaView.map(it)
+        }.collect(Collectors.toList())
     }
 
     fun buscarPorId(id: Long): CategoriaView {
         val categoria = categoriaRepository.findById(id).orElseThrow {
             NotFoundException("A categoria com o id $id não foi encontrada.")
         }
-        return categoriaViewMapper.map(categoria)
+        return categoriaToCategoriaView.map(categoria)
     }
 
     fun excluir(id: Long) {
@@ -38,23 +36,28 @@ class CategoriaService(
     }
 
     fun cadastrar(categoriaForm: CategoriaForm): CategoriaView {
-        val categoria = categoriaFormMapper.map(categoriaForm)
+        val categoria = categoriaFormToCategoria.map(categoriaForm)
         val categoriaSalva = categoriaRepository.save(categoria)
-        return categoriaViewMapper.map(categoriaSalva)
+        return categoriaToCategoriaView.map(categoriaSalva)
     }
 
     fun atualizar(atualizaCategoriaForm: AtualizaCategoriaForm): CategoriaView {
-        val categoria = buscarPorId(atualizaCategoriaForm.id!!)
-return categoriaViewMapper.map(
-    categoriaRepository.save(
-        CategoriaModel(
-            id = atualizaCategoriaForm.id,
-            titulo = atualizaCategoriaForm.titulo ?: categoria.titulo,
-            cor = atualizaCategoriaForm.cor ?: categoria.cor
+        val categoria = categoriaRepository.findById(atualizaCategoriaForm.id!!).orElseThrow{
+            NotFoundException("Categoria não encontrada.")
+        }
+        return categoriaToCategoriaView.map(
+            categoriaRepository.save(
+                Categoria(
+                    id = atualizaCategoriaForm.id,
+                    titulo = atualizaCategoriaForm.titulo ?: categoria.titulo,
+                    cor = atualizaCategoriaForm.cor ?: categoria.cor,
+                    videos = categoria.videos
 
+                )
+
+            )
         )
-
-    )
-)
     }
+
+
 }
