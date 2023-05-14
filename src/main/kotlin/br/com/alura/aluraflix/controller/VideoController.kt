@@ -16,8 +16,11 @@ class VideoController(
 ) {
 
     @GetMapping
-    fun listar(): MutableList<VideoView> {
-        return videoService.listar()
+    fun listar(
+        @RequestParam(required = false)
+        search: String?
+    ): MutableList<VideoView> {
+        return videoService.listar(search)
     }
 
     @PostMapping

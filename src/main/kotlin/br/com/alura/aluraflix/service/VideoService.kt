@@ -19,10 +19,17 @@ class VideoService(
     private val videoRepository: VideoRepository,
     private val categoriaRepository: CategoriaRepository
 ) {
-    fun listar(): MutableList<VideoView> {
-        return videoRepository.findAll().stream().map {
-            videoToVideoView.map(it)
-        }.collect(Collectors.toList())
+    fun listar(titulo: String?): MutableList<VideoView>{
+        return if (titulo== null){
+            videoRepository.findAll().stream().map {
+                videoToVideoView.map(it)
+            }.collect(Collectors.toList())
+        }else{
+            videoRepository.findByTitulo(titulo).stream().map {
+                videoToVideoView.map(it)
+            }.collect(Collectors.toList())
+        }
+
     }
 
     fun cadastrar(videoForm: VideoForm): VideoView {

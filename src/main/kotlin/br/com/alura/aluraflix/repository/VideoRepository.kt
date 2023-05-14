@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface VideoRepository: JpaRepository<Video, Long>
+interface VideoRepository: JpaRepository<Video, Long>{
+     fun findByTitulo(videoTitulo: String): List<Video>
+}
