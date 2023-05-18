@@ -3,13 +3,16 @@ package br.com.alura.aluraflix.service
 import br.com.alura.aluraflix.dto.AtualizaCategoriaForm
 import br.com.alura.aluraflix.dto.CategoriaForm
 import br.com.alura.aluraflix.dto.CategoriaView
+import br.com.alura.aluraflix.dto.VideoDto
 import br.com.alura.aluraflix.exceptions.NotFoundException
 import br.com.alura.aluraflix.mapper.CategoriaFormToCategoria
 import br.com.alura.aluraflix.mapper.CategoriaToCategoriaView
+import br.com.alura.aluraflix.mapper.VideoToVideoDto
 import br.com.alura.aluraflix.model.Categoria
 import br.com.alura.aluraflix.repository.CategoriaRepository
 import org.springframework.stereotype.Service
 import java.util.stream.Collectors
+import java.util.stream.Stream
 
 @Service
 class CategoriaService(
@@ -57,6 +60,14 @@ class CategoriaService(
 
             )
         )
+    }
+
+    fun listarVideos(id: Long): Stream<VideoDto>? {
+        val categoria = categoriaRepository.findById(id)
+        val videos = categoria.get().videos?.stream()?.map {
+            VideoToVideoDto.map(it)
+        }
+        return videos
     }
 
 

@@ -3,10 +3,12 @@ package br.com.alura.aluraflix.controller
 import br.com.alura.aluraflix.dto.AtualizaCategoriaForm
 import br.com.alura.aluraflix.dto.CategoriaForm
 import br.com.alura.aluraflix.dto.CategoriaView
+import br.com.alura.aluraflix.dto.VideoDto
 import br.com.alura.aluraflix.service.CategoriaService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.stream.Stream
 
 @RestController
 @RequestMapping("/categorias")
@@ -35,5 +37,9 @@ class CategoriaController(
     @PutMapping
     fun atualizar(@RequestBody @Valid atualizaCategoriaForm: AtualizaCategoriaForm): CategoriaView{
         return categoriaService.atualizar(atualizaCategoriaForm)
+    }
+    @GetMapping("/{id}/videos")
+    fun listarVideos(@PathVariable id: Long): Stream<VideoDto>? {
+        return categoriaService.listarVideos(id)
     }
 }
